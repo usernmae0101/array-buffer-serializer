@@ -3,8 +3,6 @@
 ![CI](https://github.com/username0101010/array-buffer-serializer/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/username0101010/array-buffer-serializer/branch/main/graph/badge.svg?token=IZFQQP34H7)](https://codecov.io/gh/username0101010/array-buffer-serializer)
 
-To optimize network bandwidth and transfer less bytes, encodes data before sending over the network and decodes back when received.
-
 ## Usage
 
 1. **Install module via NPM or yarn**
