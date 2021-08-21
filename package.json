@@ -1,0 +1,37 @@
+{
+  "name": "array-buffer-serializer",
+  "version": "0.1.0",
+  "description": "Serializes an arbitrary object for transmission over the network",
+  "homepage": "https://github.com/username0101010/array-buffer-serializer",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "serializer",
+    "compressor",
+    "optimization",
+    "bytes",
+    "network",
+    "array-buffer",
+    "bandwidth"
+  ],
+  "files": [
+    "package.json",
+    "index.js",
+    "index.d.ts",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "author": "username0101010",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username0101010/array-buffer-serializer.git"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
+  }
+}
