@@ -1,8 +1,7 @@
 {
   "name": "array-buffer-serializer",
-  "version": "0.1.0",
-  "description": "Serializes an arbitrary object for transmission over the network",
-  "homepage": "https://github.com/username0101010/array-buffer-serializer",
+  "version": "0.2.0",
+  "description": "Serializes data to transfer fewer bytes over the network",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {

@@ -3,15 +3,25 @@
 ![CI](https://github.com/username0101010/array-buffer-serializer/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/username0101010/array-buffer-serializer/branch/main/graph/badge.svg?token=IZFQQP34H7)](https://codecov.io/gh/username0101010/array-buffer-serializer)
 
+Allows to encode some data into bytes before transmission via WebRTC or WebSockets and decode it back when received.
+
+## Installation
+
+Using npm:
+
+```bash
+npm install array-buffer-serializer
+```
+
+Via yarn:
+
+```bash
+yarn add array-buffer-serializer
+```
+
 ## Usage
 
-1. **Install module via NPM or yarn**
-    
-    ```bash
-    $ npm install array-buffer-serializer
-    ```
-
-2. **Import Serializer object**
+1. **Import Serializer object**
     
     ```javascript
     // as CommonJS
@@ -20,23 +30,25 @@
     import Serializer from "array-buffer-serializer";
     ```
     
-3. **Encode some data (object) using "toBuffer" method**
+2. **Encode some data (object or array) using "toBuffer" method**
 
     ```javascript
-    const buffer = Serializer.toBuffer({
-        somethig: "here",
-        and: true,
-        here: 25
-    });
+    // as object
+    const data = { this: "way" };
+    
+    // as array
+    const data = ["or", "that" "way"];
+    
+    const buffer = Serializer.toBuffer(data);
     ```
 
-4. **Send the buffer (for example, over WebScoket)**     
+3. **Send the buffer (for example, over WebScoket)**     
     
     ```javascript
     ws.send(buffer);
     ```
     
-5. **Receive the buffer and decode it using "fromBuffer" method**
+4. **Receive the buffer and decode it using "fromBuffer" method**
 
     ```javascript
     ws.addEventListener("message", buffer => {

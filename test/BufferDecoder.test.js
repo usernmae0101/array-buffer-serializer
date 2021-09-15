@@ -4,9 +4,9 @@ const marks = require("./../lib/marks.js");
 describe("BufferDecoder", () => {
     let bufferDecoder, ab, dv;
    
-    const decodeAndExpect = (off, val, enr, ptr = []) => {
+    const decodeAndExpect = (off, val, enr, ptr = [0]) => {
         bufferDecoder.decode();
-        expect(bufferDecoder.offset).toBe(off);
+        expect(bufferDecoder.offset).toBe(off + 1);
         expect(bufferDecoder._entries[enr]).toEqual({
             value: val,
             path: ptr 
@@ -19,18 +19,19 @@ describe("BufferDecoder", () => {
         let number = exp < 64 ? Math.pow(2, exp) - 1 : 2n ** 64n - 1n; 
 
         // set positive
-        dv.setUint8(0, marks[`DEFAULT_MARK_UINT${exp}`]);
-        dv[method](1, number);
+        dv.setUint8(1, marks[`DEFAULT_MARK_UINT${exp}`]);
+        dv[method](2, number);
         // set negative
-        dv.setUint8(1 + offset, marks[`DEFAULT_MARK_INT${exp}`]);
-        dv[method](2 + offset, number);
-        decodeAndExpect(1 + offset, number, 0);
-        decodeAndExpect((1 + offset) * 2, -number, 1);
+        dv.setUint8(2 + offset, marks[`DEFAULT_MARK_INT${exp}`]);
+        dv[method](3 + offset, number);
+        decodeAndExpect(1 + offset, number, 0, [0]);
+        decodeAndExpect((1 + offset) * 2, -number, 1, [1]);
     };
 
     beforeEach(() => {
         ab = new ArrayBuffer(64);
         dv = new DataView(ab);
+        dv.setUint8(0, 0);
         bufferDecoder = new BufferDecoder(dv);
     });
 
@@ -52,67 +53,67 @@ describe("BufferDecoder", () => {
 
     [1.234567, 1.23456, 1.2345].forEach(float => {
         it("decodes float correctly", () => {
-            dv.setUint8(0, marks.DEFAULT_MARK_FLOAT);
-            dv.setFloat32(1, float);
+            dv.setUint8(1, marks.DEFAULT_MARK_FLOAT);
+            dv.setFloat32(2, float);
             decodeAndExpect(5, float, 0);
         });
     });
 
     it("decodes double correctly", () => {
-        dv.setUint8(0, marks.DEFAULT_MARK_DOUBLE);
-        dv.setFloat64(1, 1.23456789012);
+        dv.setUint8(1, marks.DEFAULT_MARK_DOUBLE);
+        dv.setFloat64(2, 1.23456789012);
         decodeAndExpect(9, 1.23456789012, 0);
     });
 
     it("decodes boolean (both: true and false) correctly", () => {
-        dv.setUint8(0, marks.DEFAULT_MARK_FBOOL);
-        dv.setUint8(1, marks.DEFAULT_MARK_TBOOL);
-        decodeAndExpect(1, false, 0);
-        decodeAndExpect(2, true, 1);
+        dv.setUint8(1, marks.DEFAULT_MARK_FBOOL);
+        dv.setUint8(2, marks.DEFAULT_MARK_TBOOL);
+        decodeAndExpect(1, false, 0, [0]);
+        decodeAndExpect(2, true, 1, [1]);
     });
 
     it("decodes undefined corecctly", () => {
-        dv.setUint8(0, marks.DEFAULT_MARK_UNDEF);
+        dv.setUint8(1, marks.DEFAULT_MARK_UNDEF);
         decodeAndExpect(1, undefined, 0);
     });
 
     it("decodes null correctly", () => {
-        dv.setUint8(0, marks.DEFAULT_MARK_NULL);
+        dv.setUint8(1, marks.DEFAULT_MARK_NULL);
         decodeAndExpect(1, null, 0);
     });
 
     it("creates an empty array and add index", () => {
-        dv.setUint8(0, marks.DEFAULT_MARK_ARR_OPEN);
+        dv.setUint8(1, marks.DEFAULT_MARK_ARR_OPEN);
         decodeAndExpect(1, [], 0);
         expect(bufferDecoder._pointer).toEqual([0]); 
     });
 
     it("creates an empty object", () => {
-        dv.setUint8(0, marks.DEFAULT_MARK_OBJ_OPEN);
+        dv.setUint8(1, marks.DEFAULT_MARK_OBJ_OPEN);
         decodeAndExpect(1, {}, 0);
     });
 
     it("deletes pointer key when close object", () => {
         bufferDecoder._pointer.push("one", "two");
-        dv.setUint8(0, marks.DEFAULT_MARK_OBJ_CLOSE);
+        dv.setUint8(1, marks.DEFAULT_MARK_OBJ_CLOSE);
         bufferDecoder.decode();
         expect(bufferDecoder._pointer).toEqual(["one"]);
     });
 
-    it("deletes current index and increase previous index when close array", () => {
+    it("deletes pointer index when close an array", () => {
         bufferDecoder._pointer.push(1, 4, 3);
-        dv.setUint8(0, marks.DEFAULT_MARK_ARR_CLOSE);
+        dv.setUint8(1, marks.DEFAULT_MARK_ARR_CLOSE);
         bufferDecoder.decode();
-        expect(bufferDecoder._pointer).toEqual([1, 5]);
+        expect(bufferDecoder._pointer).toEqual([1, 4]);
     });
 
     it("decodes string correctly", () => {
         let str = "test works";
-        dv.setUint8(0, marks.DEFAULT_MARK_STR8);
+        dv.setUint8(1, marks.DEFAULT_MARK_STR8);
         Array.from(str).forEach((char, index) => {
-            dv.setUint8(index + 1, char.charCodeAt(0));
+            dv.setUint8(index + 2, char.charCodeAt(0));
         });
-        dv.setUint8(str.length + 1, marks.DEFAULT_MARK_STR8);
+        dv.setUint8(str.length + 2, marks.DEFAULT_MARK_STR8);
         decodeAndExpect(str.length + 2, str, 0);
     });
 });
