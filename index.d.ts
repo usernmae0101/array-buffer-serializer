@@ -11,7 +11,7 @@ export interface ISerializer {
 	 * Encodes data from an object into a buffer.
 	 *
 	 * @static
-	 * @param data
+	 * @param data - [] or {}.
 	 * @returns Array buffer.
 	 */
 	toBuffer<T>(data: T): ArrayBuffer;
