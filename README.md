@@ -3,7 +3,10 @@
 ![CI](https://github.com/username0101010/array-buffer-serializer/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/username0101010/array-buffer-serializer/branch/main/graph/badge.svg?token=IZFQQP34H7)](https://codecov.io/gh/username0101010/array-buffer-serializer)
 
-Allows to encode some data into bytes before transmission via WebRTC or WebSockets and decode it back when received.
+Allows to encode an object into bytes before transmission via WebRTC or WebSocket and decode it back when received. 
+
+Some characters of the [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)), which is part of 
+[Unicode](https://en.wikipedia.org/wiki/Unicode), are reserved for encoding values: C0 (U+00C0) - E3 (U+00E3).
 
 ## Installation
 
@@ -13,7 +16,7 @@ Using npm:
 npm install array-buffer-serializer
 ```
 
-Via yarn:
+With yarn:
 
 ```bash
 yarn add array-buffer-serializer
@@ -35,9 +38,8 @@ yarn add array-buffer-serializer
     ```javascript
     // as object
     const data = { this: "way" };
-    
     // as array
-    const data = ["or", "that" "way"];
+    const data = ["or", "that", "way"];
     
     const buffer = Serializer.toBuffer(data);
     ```
@@ -77,7 +79,8 @@ Type | Economy (bytes)
 * No model is needed to describe the data structure;
 * Uses type definition instead of object's key-value separator ":" and array items delimiter ",";
 * Uses unsigned data representation by default (uint8_t, uint16_t...);
-* Different marks for positive and negative numbers, so negative sign is for free.
+* Different marks for positive and negative numbers, so negative sign is for free;
+* Marks are divided into even and odd, each odd mark indicates at the first array value, which saves at least 1 byte.
 
 ## License
 

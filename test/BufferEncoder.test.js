@@ -42,9 +42,14 @@ describe("BufferEncoder", () => {
         expect(bufferEncoder._bytes).toBe(1);
     });
 
-    it("encodes [155] as 4 bytes", () => {
+    it("encodes [155] as 3 bytes", () => {
         bufferEncoder.encode(undefined, [155]);
-        expect(bufferEncoder._bytes).toBe(4);
+        expect(bufferEncoder._bytes).toBe(3);
+    });
+    
+    it ("encodes [] (empty array) as 1 byte", () => {
+        bufferEncoder.encode(undefined, []);
+        expect(bufferEncoder._bytes).toBe(1);
     });
 
     it("encodes {a:155} as 5 bytes", () => {

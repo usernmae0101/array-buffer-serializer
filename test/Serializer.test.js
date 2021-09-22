@@ -22,17 +22,17 @@ describe("Serializer", () => {
         dv.setUint8(offset++, 'b'.charCodeAt(0));
         dv.setUint8(offset++,  marks.DEFAULT_MARK_TBOOL);
         dv.setUint8(offset++, 'a'.charCodeAt(0));
-        dv.setUint8(offset++, marks.DEFAULT_MARK_ARR_OPEN);
-        dv.setUint8(offset++, marks.DEFAULT_MARK_OBJ_OPEN);
+        dv.setUint8(offset++, marks.DEFAULT_MARK_OBJ_OPEN + 1);
         dv.setUint8(offset++, 'u'.charCodeAt(0));
         dv.setUint8(offset++, marks.DEFAULT_MARK_UNDEF);
         dv.setUint8(offset++, marks.DEFAULT_MARK_OBJ_CLOSE);
+        dv.setUint8(offset++, marks.DEFAULT_MARK_ARR_EMPTY);
         dv.setUint8(offset++, marks.DEFAULT_MARK_ARR_CLOSE);
 
         return ab;
     };
 
-    const dataObject = { s: "str", i: 15, b: true, a: [{ u: undefined }] };
+    const dataObject = { s: "str", i: 15, b: true, a: [{ u: undefined }, []] };
 
     it("serializes from buffer correctly", () => {
         const ab = createArrayBuffer();

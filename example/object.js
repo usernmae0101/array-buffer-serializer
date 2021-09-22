@@ -43,7 +43,7 @@ temp.bigint = data.bigint.toString();
 console.log("Original length:", JSON.stringify(temp).length - 1); // 451 
 
 const buffer = Serializer.toBuffer(data);
-console.log("Encoded length:", buffer.byteLength); // 257
+console.log("Encoded length:", buffer.byteLength); // 249
 
 const decoded = Serializer.fromBuffer(buffer);
 console.log("Original object:", data);
