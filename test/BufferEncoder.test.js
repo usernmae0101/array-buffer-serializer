@@ -22,7 +22,7 @@ describe("BufferEncoder", () => {
         expect(bufferEncoder._bytes).toBe(4);
     });
 
-    it("encodes to uint64 correctly", () => {
+    it("encodes to ubigint correctly", () => {
         bufferEncoder._toInt64(2n ** 64n - 1n);
         expect(bufferEncoder._bytes).toBe(8);
     });
@@ -102,9 +102,15 @@ describe("BufferEncoder", () => {
         expect(bufferEncoder._bytes).toBe(10);
     });
 
-    it("encodes 2^64 and -2^64 as 18 bytes (with marks)", () => {
+    it("encodes 2^64 and -2^64 (bigint) as 18 bytes (with marks)", () => {
         bufferEncoder.encode(undefined, 2n ** 64n - 1n);
         bufferEncoder.encode(undefined, -(2n ** 64n - 1n));
+        expect(bufferEncoder._bytes).toBe(18);
+    });
+
+    it("encodes 2^64 and -2^64 (integer) as 18 bytes (with marks)", () => {
+        bufferEncoder.encode(undefined, 2 ** 64 - 1);
+        bufferEncoder.encode(undefined, -(2 ** 64 - 1));
         expect(bufferEncoder._bytes).toBe(18);
     });
 

@@ -16,7 +16,7 @@ describe("BufferDecoder", () => {
     const setNegAndPosIntAtOnce = exp => {
         let offset = exp / 8;
         let method = exp < 64 ? `setUint${exp}` : `setBigUint${exp}`;
-        let number = exp < 64 ? Math.pow(2, exp) - 1 : 2n ** 64n - 1n; 
+        let number = exp < 64 ? Math.pow(2, exp) - 1 :  BigInt(Math.pow(2, 42)); 
 
         // set positive
         dv.setUint8(1, marks[`DEFAULT_MARK_UINT${exp}`]);
@@ -24,8 +24,8 @@ describe("BufferDecoder", () => {
         // set negative
         dv.setUint8(2 + offset, marks[`DEFAULT_MARK_INT${exp}`]);
         dv[method](3 + offset, number);
-        decodeAndExpect(1 + offset, number, 0, [0]);
-        decodeAndExpect((1 + offset) * 2, -number, 1, [1]);
+        decodeAndExpect(1 + offset, exp < 64 ? number : Number(number), 0, [0]);
+        decodeAndExpect((1 + offset) * 2, exp < 64 ? -number : -(Number(number)), 1, [1]);
     };
 
     beforeEach(() => {
@@ -63,6 +63,18 @@ describe("BufferDecoder", () => {
         dv.setUint8(1, marks.DEFAULT_MARK_DOUBLE);
         dv.setFloat64(2, 1.23456789012);
         decodeAndExpect(9, 1.23456789012, 0);
+    });
+
+    it("decodes bigint correctly", () => {
+        dv.setUint8(1, marks.DEFAULT_MARK_BIGINT);
+        dv.setBigUint64(2, 2n);
+        decodeAndExpect(9, -2n, 0);
+    });
+
+    it("decodes ubigint correctly", () => {
+        dv.setUint8(1, marks.DEFAULT_MARK_UBIGINT);
+        dv.setBigUint64(2, 2n);
+        decodeAndExpect(9, 2n, 0);
     });
 
     it("decodes boolean (both: true and false) correctly", () => {

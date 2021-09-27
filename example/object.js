@@ -36,11 +36,8 @@ const data = {
     }
 };
 
-// NOTE: JSON.stringify() can't convert bigint
-// just to show length of all data, it was converted to a string
-const temp = { ...data };
-temp.bigint = data.bigint.toString();
-console.log("Original length:", JSON.stringify(temp).length - 1); // 451 
+BigInt.prototype.toJSON = function() { return this.toString() };
+console.log("Original length:", JSON.stringify(data).length - 1); // 451 
 
 const buffer = Serializer.toBuffer(data);
 console.log("Encoded length:", buffer.byteLength); // 249
