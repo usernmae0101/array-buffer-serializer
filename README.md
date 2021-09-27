@@ -46,7 +46,6 @@ yarn add array-buffer-serializer
     ```
 
 3. **Send the buffer (for example, over WebScoket)**     
-    frequently
     ```javascript
     ws.send(buffer);
     ```
