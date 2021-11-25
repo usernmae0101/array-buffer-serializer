@@ -108,9 +108,9 @@ describe("BufferEncoder", () => {
         expect(bufferEncoder._bytes).toBe(18);
     });
 
-    it("encodes 2^64 and -2^64 (integer) as 18 bytes (with marks)", () => {
-        bufferEncoder.encode(undefined, 2 ** 64 - 1);
-        bufferEncoder.encode(undefined, -(2 ** 64 - 1));
+    it("encodes 2^53 - 1 and -(2^53 - 1) (integer) as 18 bytes (with marks)", () => {
+        bufferEncoder.encode(undefined, 2 ** 53 - 1);
+        bufferEncoder.encode(undefined, -(2 ** 53 - 1));
         expect(bufferEncoder._bytes).toBe(18);
     });
 
