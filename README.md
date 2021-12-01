@@ -63,12 +63,13 @@ yarn add array-buffer-serializer
 <table>
     <tr>
         <th rowspan="2">Type</th>
-        <th rowspan="2">Data</th>
-        <th rowspan="2">Raw</th>
+        <th colspan="2">Data</th>
         <th colspan="2">Bytes</th>
     </tr>
     <tr>
-        <th>Data</th>
+	<th>Object</th>
+	<th>Raw</th>
+        <th>Object</th>
         <th>Raw</th>
     </tr>
     <tr>
