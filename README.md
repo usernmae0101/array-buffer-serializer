@@ -60,27 +60,103 @@ yarn add array-buffer-serializer
 
 ## Table
 
-Type | Economy (bytes) 
---- | --- 
-*undefined* | 9 
-*true* | 4
-*false* | 5
-*null* | 4
-*string* | 0
-*int8_t* | up to 3
-*int16_t* | up to 4
-*int32_t* | up to 7
-*int64_t* | up to 14
-*float* | up to 4
-*double* | up to 9
+<table>
+    <tr>
+        <th rowspan="2">Type</th>
+        <th rowspan="2">Data</th>
+        <th rowspan="2">Raw</th>
+        <th colspan="2">Bytes</th>
+    </tr>
+    <tr>
+        <th>Data</th>
+        <th>Raw</th>
+    </tr>
+    <tr>
+        <td>undefined</td>
+		<td>[undefined]</td>
+		<td><00 d4></td>
+        <td>11</td>
+		<td>2</td>
+    </tr>
+    <tr>
+        <td>true</td>
+		<td>[true]</td>
+		<td><00 d2></td>
+        <td>6</td>
+		<td>2</td>
+    </tr>
+    <tr>
+        <td>false</td>
+		<td>[false]</td>
+		<td><00 d0></td>
+        <td>7</td>
+		<td>2</td>
+    </tr>
+    <tr>
+        <td>null</td>
+		<td>[null]</td>
+		<td><00 d6></td>
+        <td>6</td>
+		<td>2</td>
+    </tr>
+    <tr>
+        <td>string</td>
+		<td>["text"]</td>
+		<td><00 dc 74 65 78 74 dc></td>
+        <td>8</td>
+		<td>7</td>
+    </tr>
+    <tr>
+        <td>int8_t</td>
+		<td>[255]</td>
+		<td><00 c0 ff></td>
+        <td>5</td>
+		<td>3</td>
+    </tr>
+    <tr>
+        <td>int16_t</td>
+		<td>[-65535]</td>
+		<td><00 c6 ff ff></td>
+        <td>8</td>
+		<td>4</td>
+    </tr>
+    <tr>
+        <td>int32_t</td>
+		<td>[4294967295]</td>
+		<td><00 c8 ff ff ff ff></td>
+        <td>12</td>
+		<td>6</td>
+    </tr>
+    <tr>
+        <td>bigint</td>
+		<td>[-18446744073709551615n]</td>
+		<td><00 e2 ff ff ff ff ff ff ff ff></td>
+        <td>24</td>
+		<td>10</td>
+    </tr>
+    <tr>
+        <td>float</td>
+		<td>[1.234567]</td>
+		<td><00 d8 3f 9e 06 4b></td>
+        <td>10</td>
+		<td>6</td>
+    </tr>
+    <tr>
+        <td>double</td>
+		<td>[1.23456789012]</td>
+		<td><00 da 3f f3 c0 ca 42 8c 1d 2b></td>
+        <td>15</td>
+		<td>10</td>
+    </tr>
+</table>
 
 ## Features
 
-* No model is needed to describe the data structure;
-* Uses type definition instead of object's key-value separator ":" and array items delimiter ",";
-* Uses unsigned data representation by default (uint8_t, uint16_t...);
-* Different marks for positive and negative numbers, so negative sign is for free;
-* Marks are divided into even and odd, each odd mark indicates at the first array value.
+* No model is needed to describe the data structure
+* Uses type definition instead of object's key-value separator ":" and array items delimiter ","
+* Uses unsigned data representation by default (uint8_t, uint16_t...)
+* Different marks for positive and negative numbers, so negative sign is for free
+* Marks are divided into even and odd, each odd mark indicates at the first array value
 
 ## License
 

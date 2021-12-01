@@ -13,70 +13,71 @@ module.exports = function() {
         }
     };
 
-    suite.add(
-        "Encoder#Null", 
-        function() {
-            encoder.encode(u, null);
-        }, 
-        opts
-    )
-    .add(
-        "Encoder#Array", 
-        function() {
-            encoder.encode(u, [1, 2, 3]);
-        },
-        opts
-    )
-    .add(
-        "Encoder#Dict", 
-        function() {
-            encoder.encode(u, { a: 1 });
-        },
-        opts
-    )
-    .add(
-        "Encoder#String", 
-        function() {
-            encoder.encode(u, "string");
-        },
-        opts
-    )
-    .add(
-        "Encoder#Boolean", 
-        function() {
-            encoder.encode(u, true);
-        },
-        opts
-    )
-    .add(
-        "Encoder#Undefined", 
-        function() {
-            encoder.encode(u, undefined);
-        },
-        opts
-    )
-    .add(
-        "Encoder#Bigint", 
-        function() {
-            encoder.encode(u, 100n);
-        },
-        opts
-    )
-    .add(
-        "Encoder#Number", 
-        function() {
-            encoder.encode(u, 100);
-        },
-        opts
-    )
-    .on("cycle", function(event) {
-        console.log(
-            String(event.target)
+    suite
+        .add(
+            "Encoder#Null", 
+            function() {
+                encoder.encode(u, null);
+            }, 
+            opts
+        )
+        .add(
+            "Encoder#Array", 
+            function() {
+                encoder.encode(u, [1, 2, 3]);
+            },
+            opts
+        )
+        .add(
+            "Encoder#Dict", 
+            function() {
+                encoder.encode(u, { a: 1 });
+            },
+            opts
+        )
+        .add(
+            "Encoder#String", 
+            function() {
+                encoder.encode(u, "string");
+            },
+            opts
+        )
+        .add(
+            "Encoder#Boolean", 
+            function() {
+                encoder.encode(u, true);
+            },
+            opts
+        )
+        .add(
+            "Encoder#Undefined", 
+            function() {
+                encoder.encode(u, undefined);
+            },
+            opts
+        )
+        .add(
+            "Encoder#Bigint", 
+            function() {
+                encoder.encode(u, 100n);
+            },
+            opts
+        )
+        .add(
+            "Encoder#Number", 
+            function() {
+                encoder.encode(u, 100);
+            },
+            opts
+        )
+        .on(
+            "cycle", 
+            function(event) {
+                console.log(
+                    String(event.target)
+                );
+            }
         );
-    })
-    .on("complete", function() {
-        console.log(`Fastest is ${this.filter("fastest").map("name")}`);
-    })
 
     return suite;
 };

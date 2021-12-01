@@ -4,37 +4,29 @@ const data = [
     25,
     -255,
     [],
-    [{ a: 1 }],
+    [{a: 1}],
     [[], 155, [], 255],
     {},
-    {
-        a: 101,
-        b: [
-            102, 
-            [
-                103, 
-                [
-                    104, 
-                    { 
-                        c: 105,
-                        d: 106,
-                        e: [],
-                        f: {}
-                    }
-                ]
-            ], 
-            107
-        ]
-    },
-    undefined,
+    {a: 101,b: [102, [103, [104, {c: 105, d: 106, e: [], f: {}}]], 107]}, 
+    undefined, 
     true
 ];
 
-console.log("Original length:", JSON.stringify(data).length); // 119
+module.exprots = data;
 
-const buffer = Serializer.toBuffer(data);
-console.log("Encoded length:", buffer.byteLength); // 54
+if (module.parent === null) {
+    const buffer = Serializer.toBuffer(data);
+    const decoded = Serializer.fromBuffer(buffer);
 
-const decoded = Serializer.fromBuffer(buffer);
-console.log("Original object:", data);
-console.log("Decoded object:", decoded);   
+    console.log(
+        "Original length:", 
+        JSON.stringify(data).length
+    ); // 119
+
+    console.log(
+        "Encoded length:", 
+        buffer.byteLength
+    ); // 54
+
+    /// expect(data).toEqual(decoded); <--- true
+}
