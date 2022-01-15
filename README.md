@@ -3,7 +3,7 @@
 ![CI](https://github.com/username0101010/array-buffer-serializer/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/username0101010/array-buffer-serializer/branch/main/graph/badge.svg?token=IZFQQP34H7)](https://codecov.io/gh/username0101010/array-buffer-serializer)
 
-Similar (without fixed length data representation and some other differences) as [CBOR](https://datatracker.ietf.org/doc/html/rfc7049) or [MessagePack](https://github.com/msgpack/msgpack/blob/master/spec.md), allows to encode an object into bytes before transmission via WebRTC or WebSocket and decode it back when received. 
+Similar (without fixed length data representation and some other minor differences) as [CBOR](https://datatracker.ietf.org/doc/html/rfc7049) or [MessagePack](https://github.com/msgpack/msgpack/blob/master/spec.md), allows to encode an object into bytes before transmission via WebRTC or WebSocket and decode it back when received. 
 This is very useful for network bandwidth when you need to send data to one or more recipients frequently. Works in both: browser and node.
 
 Some characters of the [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block))
