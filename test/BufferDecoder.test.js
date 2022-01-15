@@ -1,8 +1,9 @@
 const BufferDecoder = require("./../lib/BufferDecoder.js");
 const marks = require("./../lib/marks.js");
+const ieee754 = require("ieee754");
 
 describe("BufferDecoder", () => {
-    let bufferDecoder, ab, dv;
+    let bufferDecoder, view;
    
     const decodeAndExpect = (off, val, enr, ptr = [0]) => {
         bufferDecoder.decode();
@@ -13,119 +14,159 @@ describe("BufferDecoder", () => {
         });
     };
 
-    const setNegAndPosIntAtOnce = exp => {
-        let offset = exp / 8;
-        let method = exp < 64 ? `setUint${exp}` : `setBigUint${exp}`;
-        let number = exp < 64 ? Math.pow(2, exp) - 1 :  BigInt(Math.pow(2, 42)); 
-
-        // set positive
-        dv.setUint8(1, marks[`DEFAULT_MARK_UINT${exp}`]);
-        dv[method](2, number);
-        // set negative
-        dv.setUint8(2 + offset, marks[`DEFAULT_MARK_INT${exp}`]);
-        dv[method](3 + offset, number);
-        decodeAndExpect(1 + offset, exp < 64 ? number : Number(number), 0, [0]);
-        decodeAndExpect((1 + offset) * 2, exp < 64 ? -number : -(Number(number)), 1, [1]);
-    };
-
     beforeEach(() => {
-        ab = new ArrayBuffer(64);
-        dv = new DataView(ab);
-        dv.setUint8(0, 0);
-        bufferDecoder = new BufferDecoder(dv);
+        view = new Uint8Array(64);
+        view[0] = 0;
+        bufferDecoder = new BufferDecoder(view);
     });
 
     it("decodes 2^8 and -2^8 correctly", () => {
-        setNegAndPosIntAtOnce(8);
+        view[1] = marks.DEFAULT_MARK_UINT8;
+        view[2] = 255;
+        decodeAndExpect(2, 2 ** 8 - 1, 0);
+        
+        view[3] = marks.DEFAULT_MARK_INT8;
+        view[4] = 255;
+        decodeAndExpect(4, -(2 ** 8 - 1), 1, [1]);
     });
-
+    
     it("decodes 2^16 and -2^16 correctly", () => {
-        setNegAndPosIntAtOnce(16);
+        view[1] = marks.DEFAULT_MARK_UINT16;
+        view[2] = 255;
+        view[3] = 255;
+        decodeAndExpect(3, 2 ** 16 - 1, 0);
+        
+        view[4] = marks.DEFAULT_MARK_INT16;
+        view[5] = 255;
+        view[6] = 255;
+        decodeAndExpect(6, -(2 ** 16  - 1), 1, [1]);
+    });
+    
+    it("decodes 2^32 and -2^32 correctly", () => {
+        view[1] = marks.DEFAULT_MARK_UINT32;
+        view[2] = 255;
+        view[3] = 255;
+        view[4] = 255;
+        view[5] = 255;
+        decodeAndExpect(5, 2 ** 32 - 1, 0);
+        
+        view[6] = marks.DEFAULT_MARK_INT32;
+        view[7] = 255;
+        view[8] = 255;
+        view[9] = 255;
+        view[10] = 255;
+        decodeAndExpect(10, -(2 ** 32 - 1), 1, [1]);
     });
 
-    it("decodes 2^32 and -2^32 correctly", () => {
-        setNegAndPosIntAtOnce(32);
+    it("decodes 2^53 and -2^53 correctly", () => {
+        view[1] = marks.DEFAULT_MARK_UINT53;
+        view[2] = 255;
+        view[3] = 255;
+        view[4] = 255;
+        view[5] = 255;
+        view[6] = 255;
+        view[7] = 255;
+        view[8] = 31;
+        decodeAndExpect(8, 2 ** 53 - 1, 0);
+        
+        view[9] = marks.DEFAULT_MARK_INT53;
+        view[10] = 255;
+        view[11] = 255;
+        view[12] = 255;
+        view[13] = 255;
+        view[14] = 255;
+        view[15] = 255;
+        view[16] = 31;
+        decodeAndExpect(16, -(2 ** 53 - 1), 1, [1]);
     });
 
     it("decodes 2^64 and -2^64 correctly", () => {
-        setNegAndPosIntAtOnce(64);
+        view[1] = marks.DEFAULT_MARK_UBIGINT;
+        view[2] = 255;
+        view[3] = 255;
+        view[4] = 255;
+        view[5] = 255;
+        view[6] = 255;
+        view[7] = 255;
+        view[8] = 255;
+        view[9] = 255;
+        decodeAndExpect(9, 2n ** 64n - 1n, 0);
+        
+        view[10] = marks.DEFAULT_MARK_BIGINT;
+        view[11] = 255;
+        view[12] = 255;
+        view[13] = 255;
+        view[14] = 255;
+        view[15] = 255;
+        view[16] = 255;
+        view[17] = 255;
+        view[18] = 255;
+        decodeAndExpect(18, -(2n ** 64n - 1n), 1, [1]);
     });
 
     [1.234567, 1.23456, 1.2345].forEach(float => {
         it("decodes float correctly", () => {
-            dv.setUint8(1, marks.DEFAULT_MARK_FLOAT);
-            dv.setFloat32(2, float);
+            view[1] =  marks.DEFAULT_MARK_FLOAT;
+            ieee754.write(view, float, 2, false, 23, 4);
             decodeAndExpect(5, float, 0);
         });
     });
 
     it("decodes double correctly", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_DOUBLE);
-        dv.setFloat64(2, 1.23456789012);
+        view[1] = marks.DEFAULT_MARK_DOUBLE;
+        ieee754.write(view, 1.23456789012, 2, false, 52, 8);
         decodeAndExpect(9, 1.23456789012, 0);
     });
 
-    it("decodes bigint correctly", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_BIGINT);
-        dv.setBigUint64(2, 2n);
-        decodeAndExpect(9, -2n, 0);
-    });
-
-    it("decodes ubigint correctly", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_UBIGINT);
-        dv.setBigUint64(2, 2n);
-        decodeAndExpect(9, 2n, 0);
-    });
-
     it("decodes boolean (both: true and false) correctly", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_FBOOL);
-        dv.setUint8(2, marks.DEFAULT_MARK_TBOOL);
+        view[1] = marks.DEFAULT_MARK_FBOOL;
+        view[2] = marks.DEFAULT_MARK_TBOOL;
         decodeAndExpect(1, false, 0, [0]);
         decodeAndExpect(2, true, 1, [1]);
     });
-
+    
     it("decodes undefined corecctly", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_UNDEF);
+        view[1] = marks.DEFAULT_MARK_UNDEF;
         decodeAndExpect(1, undefined, 0);
     });
 
     it("decodes null correctly", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_NULL);
+        view[1] = marks.DEFAULT_MARK_NULL;
         decodeAndExpect(1, null, 0);
     });
 
     it("creates an empty array and add index", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_ARR_OPEN);
+        view[1] = marks.DEFAULT_MARK_ARR_OPEN;
         decodeAndExpect(1, [], 0);
         expect(bufferDecoder._pointer).toEqual([0]); 
     });
 
     it("creates an empty object", () => {
-        dv.setUint8(1, marks.DEFAULT_MARK_OBJ_OPEN);
+        view[1] = marks.DEFAULT_MARK_OBJ_OPEN;
         decodeAndExpect(1, {}, 0);
     });
 
     it("deletes pointer key when close object", () => {
         bufferDecoder._pointer.push("one", "two");
-        dv.setUint8(1, marks.DEFAULT_MARK_OBJ_CLOSE);
+        view[1] = marks.DEFAULT_MARK_OBJ_CLOSE;
         bufferDecoder.decode();
         expect(bufferDecoder._pointer).toEqual(["one"]);
     });
 
     it("deletes pointer index when close an array", () => {
         bufferDecoder._pointer.push(1, 4, 3);
-        dv.setUint8(1, marks.DEFAULT_MARK_ARR_CLOSE);
+        view[1] = marks.DEFAULT_MARK_ARR_CLOSE;
         bufferDecoder.decode();
         expect(bufferDecoder._pointer).toEqual([1, 4]);
     });
 
     it("decodes string correctly", () => {
         let str = "test works";
-        dv.setUint8(1, marks.DEFAULT_MARK_STR8);
+        view[1] = marks.DEFAULT_MARK_STR8;
         Array.from(str).forEach((char, index) => {
-            dv.setUint8(index + 2, char.charCodeAt(0));
+            view[index + 2] = char.charCodeAt(0);
         });
-        dv.setUint8(str.length + 2, marks.DEFAULT_MARK_STR8);
+        view[str.length + 2] = marks.DEFAULT_MARK_STR8;
         decodeAndExpect(str.length + 2, str, 0);
     });
 });

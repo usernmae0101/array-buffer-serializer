@@ -3,33 +3,32 @@ const marks = require("./../lib/marks.js");
 
 describe("Serializer", () => {
     const createArrayBuffer = () => {
-        const ab = new ArrayBuffer(19);
-        const dv = new DataView(ab);
+        const view = new Uint8Array(19);
 
         let offset = 1;
         
         // set an object's mask
-        dv.setUint8(0, 1);
-        dv.setUint8(offset++, 's'.charCodeAt(0));
-        dv.setUint8(offset++, marks.DEFAULT_MARK_STR8);
-        dv.setUint8(offset++, 's'.charCodeAt(0));
-        dv.setUint8(offset++, 't'.charCodeAt(0));
-        dv.setUint8(offset++, 'r'.charCodeAt(0));
-        dv.setUint8(offset++, marks.DEFAULT_MARK_STR8);
-        dv.setUint8(offset++, 'i'.charCodeAt(0));
-        dv.setUint8(offset++, marks.DEFAULT_MARK_UINT8);
-        dv.setUint8(offset++, 15);
-        dv.setUint8(offset++, 'b'.charCodeAt(0));
-        dv.setUint8(offset++,  marks.DEFAULT_MARK_TBOOL);
-        dv.setUint8(offset++, 'a'.charCodeAt(0));
-        dv.setUint8(offset++, marks.DEFAULT_MARK_OBJ_OPEN + 1);
-        dv.setUint8(offset++, 'u'.charCodeAt(0));
-        dv.setUint8(offset++, marks.DEFAULT_MARK_UNDEF);
-        dv.setUint8(offset++, marks.DEFAULT_MARK_OBJ_CLOSE);
-        dv.setUint8(offset++, marks.DEFAULT_MARK_ARR_EMPTY);
-        dv.setUint8(offset++, marks.DEFAULT_MARK_ARR_CLOSE);
+        view[0] = 1;
+        view[offset++] = 's'.charCodeAt(0);
+        view[offset++] = marks.DEFAULT_MARK_STR8;
+        view[offset++] = 's'.charCodeAt(0);
+        view[offset++] = 't'.charCodeAt(0);
+        view[offset++] = 'r'.charCodeAt(0);
+        view[offset++] = marks.DEFAULT_MARK_STR8;
+        view[offset++] = 'i'.charCodeAt(0);
+        view[offset++] = marks.DEFAULT_MARK_UINT8;
+        view[offset++] = 15;
+        view[offset++] = 'b'.charCodeAt(0);
+        view[offset++] =  marks.DEFAULT_MARK_TBOOL;
+        view[offset++] = 'a'.charCodeAt(0);
+        view[offset++] = marks.DEFAULT_MARK_OBJ_OPEN + 1;
+        view[offset++] = 'u'.charCodeAt(0);
+        view[offset++] = marks.DEFAULT_MARK_UNDEF;
+        view[offset++] = marks.DEFAULT_MARK_OBJ_CLOSE;
+        view[offset++] = marks.DEFAULT_MARK_ARR_EMPTY;
+        view[offset++] = marks.DEFAULT_MARK_ARR_CLOSE;
 
-        return ab;
+        return view.buffer;
     };
 
     const dataObject = { s: "str", i: 15, b: true, a: [{ u: undefined }, []] };

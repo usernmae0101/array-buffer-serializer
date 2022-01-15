@@ -1,6 +1,6 @@
 {
   "name": "array-buffer-serializer",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Serializes data to transfer fewer bytes over the network",
   "main": "index.js",
   "types": "index.d.ts",
@@ -35,5 +35,8 @@
     "benchmark": "^2.1.4",
     "jest": "^27.0.6",
     "microtime": "^3.0.0"
+  },
+  "dependencies": {
+    "ieee754": "^1.2.1"
   }
 }

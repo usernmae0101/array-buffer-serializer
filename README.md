@@ -3,11 +3,11 @@
 ![CI](https://github.com/username0101010/array-buffer-serializer/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/username0101010/array-buffer-serializer/branch/main/graph/badge.svg?token=IZFQQP34H7)](https://codecov.io/gh/username0101010/array-buffer-serializer)
 
-Allows to encode an object into bytes before transmission via WebRTC or WebSocket and decode it back when received. 
-This is very useful for network bandwidth when you need to send data to one or more recipients frequently.
+Similar (without fixed length data representation and some other differences) as [CBOR](https://datatracker.ietf.org/doc/html/rfc7049) or [MessagePack](https://github.com/msgpack/msgpack/blob/master/spec.md), allows to encode an object into bytes before transmission via WebRTC or WebSocket and decode it back when received. 
+This is very useful for network bandwidth when you need to send data to one or more recipients frequently. Works in both: browser and node.
 
 Some characters of the [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block))
-are reserved for encoding values: C0 (U+00C0) - E3 (U+00E7).
+are reserved for encoding values: C0 (U+00C0) - E3 (U+00E7). Supports only ASCII string.
 
 ## Installation
 
@@ -37,9 +37,9 @@ yarn add array-buffer-serializer
 2. **Encode some data (object or array) using "toBuffer" method**
 
     ```javascript
-    // as object
-    const data = { this: "way" };
-    // as array
+    // as map
+    const data = {this: "way"};
+    // or array
     const data = ["or", "that", "way"];
     
     const buffer = Serializer.toBuffer(data);
@@ -58,8 +58,7 @@ yarn add array-buffer-serializer
     });
     ```
 
-## Table
-
+## Compression
 <table>
     <tr>
         <th rowspan="2">Type</th>
@@ -67,10 +66,10 @@ yarn add array-buffer-serializer
         <th colspan="2">Bytes</th>
     </tr>
     <tr>
-	<th>Object</th>
-	<th>Raw</th>
-        <th>Object</th>
-        <th>Raw</th>
+	<th>Object (decoded)</th>
+	<th>Raw (encoded)</th>
+        <th>Decoded</th>
+        <th>Encoded</th>
     </tr>
     <tr>
         <td>undefined</td>
@@ -80,14 +79,13 @@ yarn add array-buffer-serializer
 		<td>2</td>
     </tr>
     <tr>
-        <td>true</td>
+        <td rowspan="2">boolean</td>
 		<td>[true]</td>
 		<td><00 d2></td>
         <td>6</td>
 		<td>2</td>
     </tr>
     <tr>
-        <td>false</td>
 		<td>[false]</td>
 		<td><00 d0></td>
         <td>7</td>
@@ -129,6 +127,13 @@ yarn add array-buffer-serializer
 		<td>6</td>
     </tr>
     <tr>
+        <td>int53_t</td>
+		<td>[9007199254740991]</td>
+		<td><00 cc ff ff ff ff ff ff 1f></td>
+        <td>18</td>
+		<td>9</td>
+    </tr>
+    <tr>
         <td>bigint</td>
 		<td>[-18446744073709551615n]</td>
 		<td><00 e2 ff ff ff ff ff ff ff ff></td>
@@ -150,14 +155,6 @@ yarn add array-buffer-serializer
 		<td>10</td>
     </tr>
 </table>
-
-## Features
-
-* No model is needed to describe the data structure
-* Uses type definition instead of object's key-value separator ":" and array items delimiter ","
-* Uses unsigned data representation by default (uint8_t, uint16_t...)
-* Different marks for positive and negative numbers, so negative sign is for free
-* Marks are divided into even and odd, each odd mark indicates at the first array value
 
 ## License
 

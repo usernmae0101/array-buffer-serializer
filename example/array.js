@@ -27,6 +27,6 @@ if (module.parent === null) {
         "Encoded length:", 
         buffer.byteLength
     ); // 54
-
+    
     /// expect(data).toEqual(decoded); <--- true
 }

@@ -1,14 +1,14 @@
 const Benchmark = require("benchmark");
 const Serializer = require("../lib/Serializer.js");
-const dictionary = require("../example/dictionary.js");
+const map = require("../example/map.js");
 const array = require("../example/array.js");
 
 BigInt.prototype.toJSON = function() { return this.toString(); }
 
 const encoded = {
-    dict: {
-        JSON: JSON.stringify(dictionary),
-        raw: Serializer.toBuffer(dictionary) 
+    map: {
+        JSON: JSON.stringify(map),
+        raw: Serializer.toBuffer(map) 
     },
     array: {
         JSON: JSON.stringify(array),
@@ -21,9 +21,9 @@ module.exports = function() {
     
     suite
         .add(
-            "Decoder.dict#JSON", 
+            "Decoder.map#JSON", 
             function() {
-                JSON.parse(encoded.dict.JSON);
+                JSON.parse(encoded.map.JSON);
             }
         )
         .add(
@@ -33,9 +33,9 @@ module.exports = function() {
             }
         )
         .add(
-            "Decoder.dict#Serializer",
+            "Decoder.map#Serializer",
             function() {
-                Serializer.fromBuffer(encoded.dict.raw);
+                Serializer.fromBuffer(encoded.map.raw);
             }
         )
         .add(
@@ -45,9 +45,9 @@ module.exports = function() {
             }
         )
         .add(
-            "Encoder.dict#JSON",
+            "Encoder.map#JSON",
             function() {
-                JSON.stringify(dictionary);
+                JSON.stringify(map);
             }
         )
         .add(
@@ -57,9 +57,9 @@ module.exports = function() {
             }
         )
         .add(
-            "Encoder.dict#Serializer",
+            "Encoder.map#Serializer",
             function() {
-                Serializer.toBuffer(dictionary);
+                Serializer.toBuffer(map);
             }
         )
         .add(
