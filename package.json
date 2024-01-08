@@ -25,11 +25,11 @@
     "README.md",
     "LICENSE"
   ],
-  "author": "username0101010",
+  "author": "usernmae0101",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username0101010/array-buffer-serializer.git"
+    "url": "https://github.com/usernmae0101/array-buffer-serializer"
   },
   "devDependencies": {
     "benchmark": "^2.1.4",
