@@ -4,6 +4,9 @@
   "description": "Serializes data to transfer fewer bytes over the network",
   "main": "index.js",
   "types": "index.d.ts",
+  "engines": {
+    "node": ">=16.0.0" 
+  },
   "scripts": {
     "test": "jest --coverage",
     "bench": "node benchmarks/run.js"
