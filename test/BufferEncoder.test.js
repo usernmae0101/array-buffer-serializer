@@ -114,8 +114,8 @@ describe("BufferEncoder", () => {
         expect(bufferEncoder._offset).toBe(16);
     });
 
-    it("encodes 1.234567 as 5 bytes (float with mark)", () => {
-        bufferEncoder.encode(undefined, 1.234567);
+    it("encodes 123.45600128173828 as 5 bytes (float with mark)", () => {
+        bufferEncoder.encode(undefined, 123.45600128173828);
         expect(bufferEncoder._offset).toBe(5);
     });
 
