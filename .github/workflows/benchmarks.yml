@@ -15,7 +15,7 @@ jobs:
           node-version: '14.x'
 
       - name: Install npm deps
-        run: npm ci
+        run: npm install
 
       - name: Run benchmarks
         run: npm run bench
